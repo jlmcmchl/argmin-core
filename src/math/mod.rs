@@ -121,6 +121,7 @@ pub use crate::math::minmax_vec::*;
 use crate::Error;
 
 /// Modified Cholesky decompositions
+#[cfg(feature = "modcholesky")]
 pub mod modcholesky {
     //! Modified Cholesky decompositions
     //!
