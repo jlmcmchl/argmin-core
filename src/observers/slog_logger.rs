@@ -13,7 +13,7 @@ use slog::{info, o, Drain, Record, Serializer, KV};
 use slog_async;
 use slog_async::OverflowStrategy;
 use slog_json;
-use slog_term;
+// use slog_term;
 use std::fs::OpenOptions;
 use std::sync::Mutex;
 
@@ -21,7 +21,7 @@ use std::sync::Mutex;
 #[derive(Clone)]
 pub struct ArgminSlogLogger {
     /// the logger
-    logger: slog::Logger,
+    logger: Option(slog::Logger),
 }
 
 impl ArgminSlogLogger {
@@ -37,6 +37,7 @@ impl ArgminSlogLogger {
 
     /// Actual implementation of the logging to the terminal
     fn term_internal(overflow_strategy: OverflowStrategy) -> Self {
+        /*
         let decorator = slog_term::TermDecorator::new().build();
         let drain = slog_term::FullFormat::new(decorator)
             .use_original_order()
@@ -46,8 +47,9 @@ impl ArgminSlogLogger {
             .overflow_strategy(overflow_strategy)
             .build()
             .fuse();
+        */
         ArgminSlogLogger {
-            logger: slog::Logger::root(drain, o!()),
+            logger: None //slog::Logger::root(drain, o!()),
         }
     }
 
@@ -63,6 +65,7 @@ impl ArgminSlogLogger {
 
     /// Actual implementaiton of logging JSON to file
     fn file_internal(file: &str, overflow_strategy: OverflowStrategy) -> Result<Self, Error> {
+        /*
         // Logging to file
         let file = OpenOptions::new()
             .create(true)
@@ -74,8 +77,9 @@ impl ArgminSlogLogger {
             .overflow_strategy(overflow_strategy)
             .build()
             .fuse();
+        */
         Ok(ArgminSlogLogger {
-            logger: slog::Logger::root(drain, o!()),
+            logger: None //slog::Logger::root(drain, o!()),
         })
     }
 }
@@ -126,14 +130,14 @@ impl<'a> From<&'a ArgminKV> for ArgminSlogKV {
 impl<O: ArgminOp> Observe<O> for ArgminSlogLogger {
     /// Log general info
     fn observe_init(&self, msg: &str, kv: &ArgminKV) -> Result<(), Error> {
-        info!(self.logger, "{}", msg; ArgminSlogKV::from(kv));
+        //info!(self.logger, "{}", msg; ArgminSlogKV::from(kv));
         Ok(())
     }
 
     /// This should be used to log iteration data only (because this is what may be saved in a CSV
     /// file or a database)
     fn observe_iter(&self, state: &IterState<O>, kv: &ArgminKV) -> Result<(), Error> {
-        info!(self.logger, ""; state, ArgminSlogKV::from(kv));
+        //info!(self.logger, ""; state, ArgminSlogKV::from(kv));
         Ok(())
     }
 }

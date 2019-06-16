@@ -22,7 +22,7 @@ failure = "0.1.5"
 failure_derive = "0.1.5"
 ctrlc = { version = "3.1.2", optional = true }
 slog = "2.4.1"
-slog-term = "2.4.0"
+# slog-term = "2.4.0"
 slog-async = "2.3.0"
 slog-json = "2.3.0"
 serde = { version = "1.0", features = ["derive", "rc"] }
