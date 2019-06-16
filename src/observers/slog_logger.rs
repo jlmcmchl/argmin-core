@@ -21,7 +21,7 @@ use std::sync::Mutex;
 #[derive(Clone)]
 pub struct ArgminSlogLogger {
     /// the logger
-    logger: Option(slog::Logger),
+    logger: Option<slog::Logger>,
 }
 
 impl ArgminSlogLogger {
