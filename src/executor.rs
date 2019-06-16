@@ -91,7 +91,11 @@ where
     }
 
     pub fn run(mut self) -> Result<ArgminResult<O>, Error> {
-        let total_time = std::time::Instant::now();
+        let total_time = if self.observers.count() > 0 {
+            Some(std::time::Instant::now())
+        } else {
+            None
+        };
 
         let running = Arc::new(AtomicBool::new(true));
 
@@ -149,29 +153,41 @@ where
             }
 
             // Start time measurement
-            let start = std::time::Instant::now();
+            let start = if self.observers.count() > 0 {
+                Some(std::time::Instant::now())
+            } else {
+                None
+            };
 
             let data = self.solver.next_iter(&mut self.op, &self.state)?;
 
             self.state.set_func_counts(&self.op);
 
             // End time measurement
-            let duration = start.elapsed();
+            let duration = if self.observers.count() > 0 { 
+                Some(start.unwrap().elapsed())
+            } else {
+                None
+            };
 
             self.update(&data)?;
 
-            let log = data.get_kv().merge(&mut make_kv!(
-                "time" => duration.as_secs() as f64 + f64::from(duration.subsec_nanos()) * 1e-9;
-            ));
+            if self.observers.count() > 0 {
+                let log = data.get_kv().merge(&mut make_kv!(
+                    "time" => duration.unwrap().as_secs() as f64 + f64::from(duration.unwrap().subsec_nanos()) * 1e-9;
+                ));
 
-            self.observers.observe_iter(&self.state, &log)?;
+                self.observers.observe_iter(&self.state, &log)?;
+            }
 
             // increment iteration number
             self.state.increment_iter();
 
             self.checkpoint.store_cond(&self, self.state.get_iter())?;
 
-            self.state.time(total_time.elapsed());
+            if self.observers.count() > 0 { 
+                self.state.time(total_time.unwrap().elapsed());
+            }
 
             // Check if termination occured inside next_iter()
             if self.state.terminated() {

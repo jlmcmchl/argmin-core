@@ -68,6 +68,10 @@ impl<O: ArgminOp> Observer<O> {
         self.observers.push((Arc::new(observer), mode));
         self
     }
+
+    pub fn count(&self) -> usize {
+        self.observers.len()
+    }
 }
 
 /// By implementing `Observe` for `Observer` we basically allow a set of `Observer`s to be used
