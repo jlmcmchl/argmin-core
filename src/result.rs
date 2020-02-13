@@ -1,4 +1,4 @@
-// Copyright 2018 Stefan Kroboth
+// Copyright 2018-2020 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0> or the MIT license <LICENSE-MIT or
@@ -39,9 +39,11 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "ArgminResult:")?;
-        writeln!(f, "    param:       {:?}", self.state.get_param())?;
-        writeln!(f, "    cost:        {}", self.state.get_cost())?;
-        writeln!(f, "    iters:       {}", self.state.get_iter())?;
+        writeln!(f, "    param (best):  {:?}", self.state.get_best_param())?;
+        writeln!(f, "    cost (best):   {}", self.state.get_best_cost())?;
+        writeln!(f, "    iters (best):  {}", self.state.get_last_best_iter())?;
+        writeln!(f, "    iters (best):  {}", self.state.get_last_best_iter())?;
+        writeln!(f, "    iters (total): {}", self.state.get_iter())?;
         writeln!(
             f,
             "    termination: {}",

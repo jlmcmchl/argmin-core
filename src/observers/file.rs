@@ -1,4 +1,4 @@
-// Copyright 2018 Stefan Kroboth
+// Copyright 2018-2020 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0> or the MIT license <LICENSE-MIT or
@@ -51,7 +51,7 @@ impl<O: ArgminOp> WriteToFile<O> {
 }
 
 impl<O: ArgminOp> Observe<O> for WriteToFile<O> {
-    fn observe_iter(&self, state: &IterState<O>, _kv: &ArgminKV) -> Result<(), Error> {
+    fn observe_iter(&mut self, state: &IterState<O>, _kv: &ArgminKV) -> Result<(), Error> {
         let param = state.get_param();
         let iter = state.get_iter();
         let dir = Path::new(&self.dir);

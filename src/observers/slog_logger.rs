@@ -1,4 +1,4 @@
-// Copyright 2018 Stefan Kroboth
+// Copyright 2018-2020 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0> or the MIT license <LICENSE-MIT or
@@ -54,23 +54,33 @@ impl ArgminSlogLogger {
     }
 
     /// Log JSON to a file in a blocking way
-    pub fn file(file: &str) -> Result<Self, Error> {
-        ArgminSlogLogger::file_internal(file, OverflowStrategy::Block)
+    ///
+    /// If `truncate` is set to `true`, the content of existing log files at `file` will be
+    /// cleared.
+    pub fn file(file: &str, truncate: bool) -> Result<Self, Error> {
+        ArgminSlogLogger::file_internal(file, OverflowStrategy::Block, truncate)
     }
 
     /// Log JSON to a file in a non-blocking way (in case of overflow, messages are dropped)
-    pub fn file_noblock(file: &str) -> Result<Self, Error> {
-        ArgminSlogLogger::file_internal(file, OverflowStrategy::Drop)
+    ///
+    /// If `truncate` is set to `true`, the content of existing log files at `file` will be
+    /// cleared.
+    pub fn file_noblock(file: &str, truncate: bool) -> Result<Self, Error> {
+        ArgminSlogLogger::file_internal(file, OverflowStrategy::Drop, truncate)
     }
 
     /// Actual implementaiton of logging JSON to file
-    fn file_internal(file: &str, overflow_strategy: OverflowStrategy) -> Result<Self, Error> {
+    fn file_internal(
+        file: &str,
+        overflow_strategy: OverflowStrategy,
+        truncate: bool,
+    ) -> Result<Self, Error> {
         /*
         // Logging to file
         let file = OpenOptions::new()
             .create(true)
             .write(true)
-            .truncate(true)
+            .truncate(truncate)
             .open(file)?;
         let drain = Mutex::new(slog_json::Json::new(file).build()).map(slog::Fuse);
         let drain = slog_async::Async::new(drain)
@@ -136,8 +146,8 @@ impl<O: ArgminOp> Observe<O> for ArgminSlogLogger {
 
     /// This should be used to log iteration data only (because this is what may be saved in a CSV
     /// file or a database)
-    fn observe_iter(&self, state: &IterState<O>, kv: &ArgminKV) -> Result<(), Error> {
-        //info!(self.logger, ""; state, ArgminSlogKV::from(kv));
+    fn observe_iter(&mut self, state: &IterState<O>, kv: &ArgminKV) -> Result<(), Error> {
+        // info!(self.logger, ""; state, ArgminSlogKV::from(kv));
         Ok(())
     }
 }

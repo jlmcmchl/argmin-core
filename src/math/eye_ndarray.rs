@@ -1,4 +1,4 @@
-// Copyright 2018 Stefan Kroboth
+// Copyright 2018-2020 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0> or the MIT license <LICENSE-MIT or
@@ -13,6 +13,7 @@ macro_rules! make_eye {
         impl ArgminEye for Array2<$t> {
             #[inline]
             fn eye_like(&self) -> Array2<$t> {
+                // TODO: Should return an error!
                 assert!(self.is_square());
                 ndarray::Array2::eye(self.dim().0)
             }

@@ -1,4 +1,4 @@
-// Copyright 2018 Stefan Kroboth
+// Copyright 2018-2020 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0> or the MIT license <LICENSE-MIT or
@@ -7,6 +7,7 @@
 
 use crate::math::ArgminDiv;
 use ndarray::{Array1, Array2};
+use num_complex::Complex;
 
 macro_rules! make_div {
     ($t:ty) => {
@@ -50,6 +51,8 @@ make_div!(i64);
 make_div!(u64);
 make_div!(f32);
 make_div!(f64);
+make_div!(Complex<f32>);
+make_div!(Complex<f64>);
 
 #[cfg(test)]
 mod tests {
